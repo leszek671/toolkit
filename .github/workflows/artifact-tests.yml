@@ -45,7 +45,7 @@ jobs:
 
     - name: Upload Temp files
       run: |
-        printenv
+        export ACTIONS_RUNTIME_TOKEN="${{ secrets.GITHUB_TOKEN }}"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
