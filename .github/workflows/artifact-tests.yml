@@ -28,11 +28,14 @@ jobs:
       with:
         node-version: 12.x
 
+    - name: npm install
+      run: npm install
+
+    - name: Bootstrap
+      run: npm run bootstrap
+
     - name: Compile
-      run: |
-        npm install
-        tsc
-      working-directory: ./packages/artifact
+      run: npm build
 
     - name: Create Temp Upload files
       run: |
@@ -73,6 +76,19 @@ jobs:
       run:
         mkdir single-artifact-directory
         node -e "require('./packages/artifact/lib/artifact-client').create().downloadArtifact('my-artifact-1','./single-artifact-directory')"
+    
+    - name: 'Verify First Artifact'
+      run: |
+        $file = "single-artifact-directory/world.txt"
+        if(!(Test-Path -path $file))
+        {
+            Write-Error "Expected file does not exist"
+        }
+        if(!((Get-Content $file) -ceq "hello"))
+        {
+            Write-Error "File contents of downloaded artifact are incorrect"
+        }
+      shell: pwsh
 
     - name: Download All Artifacts
       run:
