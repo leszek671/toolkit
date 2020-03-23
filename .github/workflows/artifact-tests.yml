@@ -70,7 +70,7 @@ jobs:
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
     - name: Download Single Artifact
-      run:
+      run: |
         export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
         export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
         export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
