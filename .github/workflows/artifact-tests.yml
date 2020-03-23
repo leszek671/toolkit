@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+        runs-on: [ubuntu-latest]
       fail-fast: false
 
     runs-on: ${{ matrix.runs-on }}
@@ -45,6 +45,7 @@ jobs:
 
     - name: Upload Temp files
       run: |
+        printenv
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
