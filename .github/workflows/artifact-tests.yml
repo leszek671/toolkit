@@ -55,14 +55,11 @@ jobs:
         EnvName: GITHUB_RUN_ID
       id: get_run_id
 
-    - name: Set Necessary Env Variables
+    - name: Upload Temp files
       run: |
         export ACTIONS_RUNTIME_TOKEN="${{ secrets.GITHUB_TOKEN }}"
         export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
         export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
-
-    - name: Upload Temp files
-      run: |
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
