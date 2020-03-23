@@ -79,7 +79,8 @@ jobs:
     
     - name: 'Verify First Artifact'
       run: |
-        $file = "single-artifact-directory/world.txt"
+        $file = "single-artifact-directory/artifact-path/world.txt"
+        ls
         if(!(Test-Path -path $file))
         {
             Write-Error "Expected file does not exist"
