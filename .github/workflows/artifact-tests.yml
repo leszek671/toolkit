@@ -35,7 +35,7 @@ jobs:
       run: npm run bootstrap
 
     - name: Compile
-      run: npm build
+      run: npm run build
 
     - name: Create Temp Upload files
       run: |
