@@ -61,19 +61,19 @@ jobs:
         EnvName: GITHUB_RUN_ID
       id: get_run_id
 
-    - name: Set Env Variables
+    - name: Upload Artifacts
       run: |
         export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
         export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
         export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
-
-    - name: Upload Artifacts
-      run: |
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
     - name: Download Single Artifact
       run:
+        export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
+        export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
+        export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
         mkdir single-artifact-directory
         node -e "require('./packages/artifact/lib/artifact-client').create().downloadArtifact('my-artifact-1','./single-artifact-directory')"
     
@@ -92,5 +92,8 @@ jobs:
 
     - name: Download All Artifacts
       run:
+        export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
+        export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
+        export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
         mkdir multiple-artifact-directory
         node -e "require('./packages/artifact/lib/artifact-client').create().downloadAllArtifacts('./multiple-artifact-directory')"
