@@ -43,6 +43,12 @@ jobs:
         echo "hello" > artifact-path/world.txt
         echo "Some large amount of text that has a compression ratio that is greater than 100%. If greater than 100%, gzip is used to upload the file" > artifact-path/gzip.txt
 
+    - name: Get ACTIONS_RUNTIME_TOKEN
+      uses: konradpabjan/Get-Actions-Env-Variable-From-Node-Context@master
+      with:
+        EnvName: ACTIONS_RUNTIME_TOKEN
+      id: get_runtime_token
+
     - name: Get ACTIONS_RUNTIME_URL
       uses: konradpabjan/Get-Actions-Env-Variable-From-Node-Context@master
       with:
@@ -57,7 +63,7 @@ jobs:
 
     - name: Upload Temp files
       run: |
-        export ACTIONS_RUNTIME_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+        export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
         export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
         export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
