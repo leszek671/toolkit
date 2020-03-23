@@ -30,12 +30,11 @@ jobs:
 
     - name: npm install
       run: npm install
-
-    - name: Bootstrap
-      run: npm run bootstrap
+      working-directory: ./packages/artifact
 
     - name: Compile
       run: npm run build
+      working-directory: ./packages/artifact
 
     - name: Create Temp Upload files
       run: |
@@ -61,14 +60,23 @@ jobs:
         EnvName: GITHUB_RUN_ID
       id: get_run_id
 
-    - name: Upload Temp files
+    - name: Set Env Variables
       run: |
         export ACTIONS_RUNTIME_TOKEN="${{ steps.get_runtime_token.outputs.EnvValue }}"
         export ACTIONS_RUNTIME_URL="${{ steps.get_runtime_url.outputs.EnvValue }}"
         export GITHUB_RUN_ID="${{ steps.get_run_id.outputs.EnvValue }}"
+
+    - name: Upload Artifacts
+      run: |
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], '${{ github.workspace }}')"
         node -e "require('./packages/artifact/lib/artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], '${{ github.workspace }}')"
 
-    - name: Download Temp files
+    - name: Download Single Artifact
       run:
-        mkdir download-path
+        mkdir single-artifact-directory
+        node -e "require('./packages/artifact/lib/artifact-client').create().downloadArtifact('my-artifact-1','./single-artifact-directory')"
+
+    - name: Download All Artifacts
+      run:
+        mkdir multiple-artifact-directory
+        node -e "require('./packages/artifact/lib/artifact-client').create().downloadAllArtifacts('./multiple-artifact-directory')"
