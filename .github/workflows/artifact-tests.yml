@@ -30,7 +30,6 @@ jobs:
 
     - name: npm install
       run: npm install
-      working-directory: ./packages/artifact
 
     - name: Compile
       run: tsc
