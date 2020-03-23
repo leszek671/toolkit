@@ -33,7 +33,7 @@ jobs:
       working-directory: ./packages/artifact
 
     - name: Compile
-      run: npm run build
+      run: tsc
       working-directory: ./packages/artifact
 
     - name: Create Temp Upload files
