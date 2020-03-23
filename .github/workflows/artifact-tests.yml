@@ -79,14 +79,14 @@ jobs:
     
     - name: 'Verify First Artifact'
       run: |
-        $file = "single-artifact-directory/artifact-path/world.txt"
-        ls
+        $file = "single-artifact-directory/artifact-path/world.txt"  
         if(!(Test-Path -path $file))
         {
             Write-Error "Expected file does not exist"
         }
-        if(!((Get-Content $file) -ceq "hello"))
+        if(!((Get-Content $file) -ceq 'hello'))
         {
+            cat $file
             Write-Error "File contents of downloaded artifact are incorrect"
         }
       shell: pwsh
