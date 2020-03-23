@@ -1,0 +1,53 @@
+name: artifact-unit-tests
+on:
+  push:
+    paths:
+        - 'packages/artifact/**'
+  pull_request:
+    paths:
+        - 'packages/artifact/**'
+
+jobs:
+
+  build:
+    name: Build
+
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+      fail-fast: false
+
+    runs-on: ${{ matrix.runs-on }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: npm install
+      run: npm install
+
+    - name: Bootstrap
+      run: npm run bootstrap
+
+    - name: Compile
+      run: npm run build
+
+    - name: Create Temp Upload files
+      run: |
+        mkdir artifact-path
+        echo "hello" > artifact-path/world.txt
+        echo "Some large amount of text that has a compression ratio that is greater than 100%. If greater than 100%, gzip is used to upload the file" > artifact-path/gzip.txt
+
+    - name: Upload Temp files
+      run: |
+        node -e "require('./artifact-client').create().uploadArtifact('my-artifact-1',['artifact-path/world.txt'], ${{ github.workspace }})"
+        node -e "require('./artifact-client').create().uploadArtifact('my-artifact-2',['artifact-path/gzip.txt'], ${{ github.workspace }})"
+
+    - name: Download Temp files
+      run:
+        mkdir download-path
